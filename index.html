@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISO 286 Tolerance Toolkit</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-left">
+      <h1>ISO 286 Tolerance Toolkit</h1>
+      <span class="subtitle">Coaxial assembly tolerance designer</span>
+    </div>
+    <div class="header-actions">
+      <button type="button" id="btn-load-example" class="btn btn-secondary">Load plug valve example</button>
+      <button type="button" id="btn-export" class="btn btn-secondary">Export</button>
+      <label class="btn btn-secondary file-btn">
+        Import
+        <input type="file" id="btn-import" accept=".json,application/json" hidden>
+      </label>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <aside class="panel parts-panel">
+      <div class="panel-header">
+        <h2>Assembly</h2>
+        <button type="button" id="btn-add-part" class="btn btn-primary btn-sm">+ Add part</button>
+      </div>
+      <ul id="parts-list" class="parts-list"></ul>
+      <p id="parts-empty" class="empty-hint">No parts yet. Add a part or load the plug valve example.</p>
+    </aside>
+
+    <section class="panel viz-panel">
+      <div class="viz-toolbar">
+        <div class="toolbar-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="toggle-tolerance-bands">
+            <span>Tolerance bands</span>
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="toggle-plan-view">
+            <span>Plan view</span>
+          </label>
+        </div>
+        <div class="toolbar-group">
+          <button type="button" id="btn-wiggle" class="btn btn-accent">Wiggle test</button>
+          <select id="wiggle-mode" class="select-sm" title="Tolerance scenario">
+            <option value="worst">Worst case (max clearance gap)</option>
+            <option value="best">Best case (min clearance)</option>
+          </select>
+          <span id="wiggle-status" class="wiggle-status"></span>
+        </div>
+      </div>
+      <div class="viz-container">
+        <svg id="viz-svg" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div id="measure-tooltip" class="measure-tooltip hidden"></div>
+      </div>
+      <p class="viz-hint">Click a part in the diagram to inspect. During wiggle test, drag the floating assembly laterally.</p>
+    </section>
+
+    <aside class="panel detail-panel">
+      <div class="panel-header">
+        <h2 id="detail-title">Part details</h2>
+      </div>
+      <div id="detail-empty" class="empty-hint">Select a part to edit its parameters and fits.</div>
+      <form id="detail-form" class="detail-form hidden"></form>
+    </aside>
+  </main>
+
+  <!-- Part creation modal -->
+  <dialog id="part-modal" class="modal">
+    <form id="part-modal-form" method="dialog" class="modal-content">
+      <header class="modal-header">
+        <h2>Add new part</h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      </header>
+
+      <div class="form-grid">
+        <label>
+          Part name
+          <input type="text" id="new-part-name" required placeholder="e.g. Valve body bore">
+        </label>
+
+        <label>
+          Part type
+          <select id="new-part-type" required></select>
+        </label>
+
+        <label>
+          Constraint
+          <select id="new-part-constraint" required>
+            <option value="fixed">Fixed / pinned (does not move)</option>
+            <option value="floating">Floating (constrained by neighbors)</option>
+          </select>
+        </label>
+
+        <p id="type-description" class="type-description"></p>
+      </div>
+
+      <fieldset class="form-section">
+        <legend>Initial dimensions (mm)</legend>
+        <div id="new-part-dims" class="form-grid"></div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Initial fits (ISO 286)</legend>
+        <div id="new-part-fits" class="form-grid"></div>
+      </fieldset>
+
+      <footer class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="modal-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add to assembly</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
